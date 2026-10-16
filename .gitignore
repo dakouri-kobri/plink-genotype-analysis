@@ -1,0 +1,28 @@
+# RStudio and R session files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Quarto temporary files
+/.quarto/
+**/*.quarto_ipynb
+*_cache/
+
+# Rendered report and supporting files
+/assignment.html
+/assignment_files/
+
+# Generated datasets and PLINK results
+/data/
+/results/
+
+# Reference PDFs
+/docs/
+
+# Local environment configuration
+.Renviron
+
+# Operating system files
+.DS_Store
+Thumbs.db

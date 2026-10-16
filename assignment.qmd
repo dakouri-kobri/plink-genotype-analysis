@@ -1,0 +1,24 @@
+---
+title: "Handling Genotype Data in PLINK"
+author: "Dakouri Kobri"
+format:
+  html:
+    toc: true
+    code-fold: false
+execute:
+  echo: true
+---
+
+## Setup
+
+```{r}
+#| label: setup
+
+plink_path <- unname(Sys.which("plink"))
+
+if (!nzchar(plink_path)) {
+  stop("PLINK was not found on PATH.")
+}
+
+system2(plink_path, args = "--version")
+```
