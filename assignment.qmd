@@ -156,7 +156,7 @@ tdt_data1
 
 **Interpretation**
 
-The TDT detected no evidence of preferential allele transmission to affected offspring at any of the three markers. Transmitted and untransmitted counts were equal at SNP1 (1:1), SNP3 (2:2) and SNP2 (3:3), resulting in odds ratios of 1, chi-square statistics of 0 and P-values of 1. These findings agree with the lack of significant association in Exercise 3, although the tests examine different comparisons. The small number of informative transmissions possibily limits the power to detect an association.
+The TDT detected no evidence of preferential allele transmission to affected offspring at any of the three markers. Transmitted and untransmitted counts were equal at SNP1 (1:1), SNP3 (2:2) and SNP2 (3:3), resulting in odds ratios of 1, chi-square statistics of 0 and P-values of 1. These findings agree with the lack of significant association in Exercise 3, although the tests examine different comparisons. The small number of informative transmissions possibly limits the power to detect an association.
 
 ## Exercise 5: Fisher's exact test in dataset 1
 
@@ -313,3 +313,35 @@ assoc_data2
 **Interpretation**
 
 Allelic chi-square tests identified nominal associations at SNP5 (P = 0.01298) and SNP6 (P = 0.01431). A at SNP5 was less frequent in cases than controls (OR = 0.10), whereas C at SNP6 was more frequent in cases (OR = 9.00). Neither association remained significant after Bonferroni correction for eight tests (threshold = 0.00625). Given the small sample and low allele counts, these results should be compared with Fisher’s exact tests.
+
+## Exercise 11: Fisher's exact test in dataset 2
+
+```{r}
+#| label: fisher-data2
+
+run_plink(
+  "data/raw/data2",
+  c("--assoc", "fisher"),
+  "results/data2_fisher",
+  "--tfile"
+)
+
+fisher_data2 <- read.table(
+  "results/data2_fisher.assoc.fisher",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+fisher_data2$P_BONF <- p.adjust(
+  fisher_data2$P,
+  method = "bonferroni",
+  n = 8
+)
+
+print("Fisher’s exact association tests in dataset 2")
+fisher_data2
+```
+
+**Interpretation**
+
+Fisher’s exact tests identified nominal associations at SNP5 (P = 0.03607) and SNP6 (P = 0.03913), consistent with the unadjusted conclusions from the chi-square tests. Neither remained significant after Bonferroni correction for eight markers (adjusted P = 0.28856 and 0.31304, respectively). The remaining markers showed no significant association. Thus, no marker met the significance criterion after accounting for multiple testing.
