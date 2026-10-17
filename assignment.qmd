@@ -203,3 +203,41 @@ ld_log <- readLines(
 **Interpretation**
 
 SNP1 and SNP2 showed complete linkage disequilibrium among the analyzed founders (r\^2 = 1, D' = 1). The estimated haplotypes were C–A (33.33%) and T–G (66.67%), while T–A and C–G had approximately zero frequencies. These estimates indicate perfect prediction between the markers in this sample. The finding does not establish that perfect LD exists in the wider population or that recombination has never occurred between them.
+
+## Exercise 7: Missing data in dataset 1
+
+```{r}
+#| label: missing-data1
+
+run_plink(
+  "data/raw/data1",
+  "--missing",
+  "results/data1_missing"
+)
+
+missing_individuals <- read.table(
+  "results/data1_missing.imiss",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+missing_markers <- read.table(
+  "results/data1_missing.lmiss",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+knitr::kable(
+  missing_markers,
+  caption = "Missing genotypes per marker"
+)
+
+knitr::kable(
+  missing_individuals[missing_individuals$N_MISS > 0, ],
+  caption = "Individuals with at least one missing genotype"
+)
+```
+
+**Interpretation**
+
+Missing-data analysis identified 22 missing genotype calls out of 165 (13.33%) across 55 individuals and three markers. SNP1 had the highest missingness (20.00%), followed by SNP3 (10.91%) and SNP2 (9.09%). Eleven individuals had at least one missing genotype, including five with no genotype data at any marker. Missing genotypes reduce the information available for analysis and can cause the contributing sample to differ between markers.
