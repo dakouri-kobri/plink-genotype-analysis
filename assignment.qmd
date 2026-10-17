@@ -157,3 +157,28 @@ tdt_data1
 **Interpretation**
 
 The TDT detected no evidence of preferential allele transmission to affected offspring at any of the three markers. Transmitted and untransmitted counts were equal at SNP1 (1:1), SNP3 (2:2) and SNP2 (3:3), resulting in odds ratios of 1, chi-square statistics of 0 and P-values of 1. These findings agree with the lack of significant association in Exercise 3, although the tests examine different comparisons. The small number of informative transmissions possibily limits the power to detect an association.
+
+## Exercise 5: Fisher's exact test in dataset 1
+
+```{r}
+#| label: fisher-data1
+
+run_plink(
+  "data/raw/data1",
+  c("--assoc", "fisher"),
+  "results/data1_fisher"
+)
+
+fisher_data1 <- read.table(
+  "results/data1_fisher.assoc.fisher",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+print("Fisher’s exact association tests in dataset 1")
+fisher_data1
+```
+
+**Interpretation**
+
+Fisher’s exact tests detected no statistically significant association between the three markers and case/control status (P = 0.8224–0.8350). Allele frequencies and odds ratios matched those from Exercise 3, while the P-values differed because of the testing method. Both methods therefore lead to the same conclusion: these data provide insufficient evidence of allelic association. Fisher’s test does not resolve the limitation that individuals in this dataset are related.
