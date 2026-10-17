@@ -241,3 +241,17 @@ knitr::kable(
 **Interpretation**
 
 Missing-data analysis identified 22 missing genotype calls out of 165 (13.33%) across 55 individuals and three markers. SNP1 had the highest missingness (20.00%), followed by SNP3 (10.91%) and SNP2 (9.09%). Eleven individuals had at least one missing genotype, including five with no genotype data at any marker. Missing genotypes reduce the information available for analysis and can cause the contributing sample to differ between markers.
+
+## Exercise 8: Relevant quality control steps for genotyping-platform data and options provided by PLINK
+
+Relevant quality control steps for genotyping-platform data checks both the individuals and the markers, because unreliable genotypes can distort association results. The following is a list of those steps, for which PLINK also offers some options:
+
+- **Missing genotypes per individual**: Identify samples with poor genotyping success
+- **Missing genotypes per marker**: Identify markers that frequently fail
+- **Minor allele frequency**: Identify variants with too few minor allele copies for the intended analysis
+- **Hardy–Weinberg equilibrium (HWE)**: Flag unusual genotype proportions that may indicate errors or population structure
+- **Mendelian errors**: Detect genotypes inconsistent with recorded parent–offspring relationships
+- **Unusual heterozygosity**: Investigate possible contamination, inbreeding or other sample problems
+- **Recorded sex consistency**: Investigate discrepancies using suitable sex-chromosome data
+- **Duplicates and relatedness**: Identify duplicate samples or unexpected relatives
+- **Population structure**: Identify ancestry differences that could confound association tests
