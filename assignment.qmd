@@ -345,3 +345,25 @@ fisher_data2
 **Interpretation**
 
 Fisher’s exact tests identified nominal associations at SNP5 (P = 0.03607) and SNP6 (P = 0.03913), consistent with the unadjusted conclusions from the chi-square tests. Neither remained significant after Bonferroni correction for eight markers (adjusted P = 0.28856 and 0.31304, respectively). The remaining markers showed no significant association. Thus, no marker met the significance criterion after accounting for multiple testing.
+
+## Exercise 12: Linkage disequilibrium between SNP4 and SNP5
+
+```{r}
+#| label: ld-data2-snp4-snp5
+
+run_plink(
+  "data/raw/data2",
+  c("--ld", "SNP4", "SNP5"),
+  "results/data2_ld_snp4_snp5",
+  "--tfile"
+)
+
+ld_log_data2 <- readLines(
+  "results/data2_ld_snp4_snp5.log",
+  warn = FALSE
+)
+```
+
+**Interpretation**
+
+SNP4 and SNP5 showed weak linkage disequilibrium (r\^2 = 0.0476, D' = 0.2381). All four possible haplotypes had nonzero estimated frequencies, with A–A and C–T more frequent than expected under linkage equilibrium. The low r\^2 indicates limited predictive correspondence between the markers. These estimates describe LD strength in this small sample and do not, by themselves, establish statistical significance.
