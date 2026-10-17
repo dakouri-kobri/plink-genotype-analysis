@@ -23,6 +23,39 @@ if (!nzchar(plink_path)) {
 system2(plink_path, args = "--version")
 ```
 
+```{r}
+#| label: resusable-run-plink-function
+
+run_plink <- function(
+    input, 
+    operation,
+    output,
+    input_flag = "--file"
+){
+  dir.create(
+    dirname(output),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  
+  status <- system2(
+    plink_path,
+    args = c(
+      input_flag, shQuote(input),
+      operation,
+      "--out", shQuote(output)
+    )
+  )
+  
+  if (status != 0){
+    stop(
+      "PLINK failed, check the output above and ", output, ".log")
+  }
+  
+  invisible(status)
+}
+```
+
 ## Exercise 1: Inspect the input files
 
 ```{r}
@@ -54,20 +87,11 @@ for (path in input_files){
 ```{r}
 #| label: allele-frequencies-data1
 
-dir.create("results", showWarnings = FALSE)
-
-status <- system2(
-  plink_path,
-  args = c(
-    "--file", "data/raw/data1",
-    "--freq",
-    "--out", "results/data1_freq"
-  )
+run_plink(
+  "data/raw/data1",
+  "--freq",
+  "results/data1_freq"
 )
-
-if (status != 0){
-  stop("PLINK failed. Check the output above")
-}
 
 freq_data1 <- read.table(
   "results/data1_freq.frq",
@@ -79,10 +103,6 @@ cat("Allele frequencies in dataset 1")
 freq_data1
 ```
 
-```{r}
-knitr::kable(freq_data1, caption = "Allele frequencies in dataset 1")
-```
-
 **Interpretation**
 
 Allele frequencies were calculated using founders with nonmissing genotypes. C at SNP1 and G at SNP3 each had a minor allele frequency of 33.33% (8 of 24 counted allele copies). At SNP2, A had a slightly higher minor allele frequency of 34.62% (9 of 26 copies). The different numbers of counted allele copies indicate that genotype availability differed between markers. All three markers were polymorphic, with both alleles present among the counted founders.
@@ -92,18 +112,11 @@ Allele frequencies were calculated using founders with nonmissing genotypes. C a
 ```{r}
 #| label: association-data1
 
-status <- system2(
-  plink_path,
-  args = c(
-    "--file", "data/raw/data1",
-    "--assoc",
-    "--out", "results/data1_assoc"
-  )
+run_plink(
+  "data/raw/data1",
+  "--assoc",
+  "results/data1_assoc"
 )
-
-if (status != 0){
-  stop("PLINK failed. Check the output above")
-}
 
 assoc_data1 <- read.table(
   "results/data1_assoc.assoc",
