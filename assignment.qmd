@@ -22,3 +22,29 @@ if (!nzchar(plink_path)) {
 
 system2(plink_path, args = "--version")
 ```
+
+## Exercise 1: 
+
+```{r}
+#| label: inspect-input-files
+
+input_files <- c(
+  "data/raw/data1.map",
+  "data/raw/data1.ped",
+  "data/raw/data2.tfam",
+  "data/raw/data2.tped"
+)
+
+for (path in input_files){
+  cat("\n--", basename(path), "--\n")
+  cat(
+    readLines(
+      path,
+      n = 5, 
+      warn = FALSE,
+    ),
+    sep = "\n"
+  )
+  cat("\n")
+}
+```
