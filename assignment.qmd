@@ -182,3 +182,24 @@ fisher_data1
 **Interpretation**
 
 Fisher’s exact tests detected no statistically significant association between the three markers and case/control status (P = 0.8224–0.8350). Allele frequencies and odds ratios matched those from Exercise 3, while the P-values differed because of the testing method. Both methods therefore lead to the same conclusion: these data provide insufficient evidence of allelic association. Fisher’s test does not resolve the limitation that individuals in this dataset are related.
+
+## Exercise 6: Linkage disequilibrium between SNP1 and SNP2
+
+```{r}
+#| label: ld-data1-snp1-snp2
+
+run_plink(
+  "data/raw/data1",
+  c("--ld", "SNP1", "SNP2"),
+  "results/data1_ld_snp1_snp2"
+)
+
+ld_log <- readLines(
+  "results/data1_ld_snp1_snp2.log",
+  warn = FALSE
+)
+```
+
+**Interpretation**
+
+SNP1 and SNP2 showed complete linkage disequilibrium among the analyzed founders (r\^2 = 1, D' = 1). The estimated haplotypes were C–A (33.33%) and T–G (66.67%), while T–A and C–G had approximately zero frequencies. These estimates indicate perfect prediction between the markers in this sample. The finding does not establish that perfect LD exists in the wider population or that recombination has never occurred between them.
