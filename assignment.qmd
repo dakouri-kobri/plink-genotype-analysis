@@ -131,3 +131,29 @@ assoc_data1
 **Interpretation**
 
 The allelic chi-square tests detected no statistically significant association between the three markers and case/control status (all P \> 0.05). Although A1 frequencies were slightly higher in cases than controls, the odds ratios were close to 1 (1.111–1.224). These results do not establish that an association is absent, particularly given the small dataset. Interpretation is also limited because the basic test does not account for relationships between individuals.
+
+## Exercise 4: Transmission disequilibrium test in dataset 1
+
+```{r}
+#| label: tdt-dataset1
+
+run_plink(
+  "data/raw/data1",
+  "--tdt",
+  "results/data1_tdt"
+)
+
+tdt_data1 <- read.table(
+  "results/data1_tdt.tdt",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+
+print("Transmission disequilibrium tests in dataset 1")
+tdt_data1
+```
+
+**Interpretation**
+
+The TDT detected no evidence of preferential allele transmission to affected offspring at any of the three markers. Transmitted and untransmitted counts were equal at SNP1 (1:1), SNP3 (2:2) and SNP2 (3:3), resulting in odds ratios of 1, chi-square statistics of 0 and P-values of 1. These findings agree with the lack of significant association in Exercise 3, although the tests examine different comparisons. The small number of informative transmissions possibily limits the power to detect an association.
