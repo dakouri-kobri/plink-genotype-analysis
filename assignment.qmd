@@ -86,3 +86,35 @@ knitr::kable(freq_data1, caption = "Allele frequencies in dataset 1")
 **Interpretation**
 
 Allele frequencies were calculated using founders with nonmissing genotypes. C at SNP1 and G at SNP3 each had a minor allele frequency of 33.33% (8 of 24 counted allele copies). At SNP2, A had a slightly higher minor allele frequency of 34.62% (9 of 26 copies). The different numbers of counted allele copies indicate that genotype availability differed between markers. All three markers were polymorphic, with both alleles present among the counted founders.
+
+## Exercise 3: Association test in dataset 1
+
+```{r}
+#| label: association-data1
+
+status <- system2(
+  plink_path,
+  args = c(
+    "--file", "data/raw/data1",
+    "--assoc",
+    "--out", "results/data1_assoc"
+  )
+)
+
+if (status != 0){
+  stop("PLINK failed. Check the output above")
+}
+
+assoc_data1 <- read.table(
+  "results/data1_assoc.assoc",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+print("Allelic association test in dataset 1")
+assoc_data1
+```
+
+**Interpretation**
+
+The allelic chi-square tests detected no statistically significant association between the three markers and case/control status (all P \> 0.05). Although A1 frequencies were slightly higher in cases than controls, the odds ratios were close to 1 (1.111–1.224). These results do not establish that an association is absent, particularly given the small dataset. Interpretation is also limited because the basic test does not account for relationships between individuals.
