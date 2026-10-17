@@ -44,7 +44,8 @@ run_plink <- function(
       input_flag, shQuote(input),
       operation,
       "--out", shQuote(output)
-    )
+    ),
+    stdout = FALSE
   )
   
   if (status != 0){
@@ -198,6 +199,17 @@ ld_log <- readLines(
   "results/data1_ld_snp1_snp2.log",
   warn = FALSE
 )
+
+cat("Linkage disequilibrium between SNP1 and SNP2\n\n")
+
+start <- grep("^--ld SNP1 SNP2:", ld_log)
+end <- grep("In phase alleles", ld_log, fixed = TRUE)
+
+if (length(start) == 1 && length(end) == 1 && end >= start) {
+  cat(ld_log[seq.int(start, end)], sep = "\n")
+} else {
+  stop("Could not locate the LD statistics in the log.")
+}
 ```
 
 **Interpretation**
@@ -362,6 +374,17 @@ ld_log_data2 <- readLines(
   "results/data2_ld_snp4_snp5.log",
   warn = FALSE
 )
+
+cat("Linkage disequilibrium between SNP4 and SNP5\n\n")
+
+start <- grep("^--ld SNP4 SNP5:", ld_log_data2)
+end <- grep("In phase alleles", ld_log_data2, fixed = TRUE)
+
+if (length(start) == 1 && length(end) == 1 && end >= start) {
+  cat(ld_log_data2[seq.int(start, end)], sep = "\n")
+} else {
+  stop("Could not locate the LD statistics in the log.")
+}
 ```
 
 **Interpretation**
@@ -384,4 +407,58 @@ ld_log_snp5_snp6 <- readLines(
   "results/data2_ld_snp5_snp6.log",
   warn = FALSE
 )
+
+cat("Linkage disequilibrium between SNP5 and SNP6\n\n")
+
+start <- grep("^--ld SNP5 SNP6:", ld_log_snp5_snp6)
+end <- grep("In phase alleles", ld_log_snp5_snp6, fixed = TRUE)
+
+if (length(start) == 1 && length(end) == 1 && end >= start) {
+  cat(ld_log_snp5_snp6[seq.int(start, end)], sep = "\n")
+} else {
+  stop("Could not locate the LD statistics in the log.")
+}
 ```
+
+## Exercise 14: Hardy–Weinberg equilibrium
+
+```{r}
+#| label: hwe-both-datasets
+
+run_plink(
+  "data/raw/data1",
+  "--hardy",
+  "results/data1_hwe"
+)
+
+run_plink(
+  "data/raw/data2",
+  "--hardy",
+  "results/data2_hwe",
+  "--tfile"
+)
+
+hwe_data1 <- read.table(
+  "results/data1_hwe.hwe",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+
+hwe_data2 <- read.table(
+  "results/data2_hwe.hwe",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+
+cat("\nHardy–Weinberg equilibrium tests: dataset 1\n")
+print(hwe_data1)
+
+cat("\nHardy–Weinberg equilibrium tests: dataset 2\n")
+print(hwe_data2)
+```
+
+**interpretation**
+
+Exact Hardy–Weinberg equilibrium tests detected no significant departures at any marker in either dataset (all P \> 0.05). In controls, P-values were 0.5301–1.0000 for dataset 1 and 1.0000 for all markers in dataset 2. Thus, these tests did not flag any markers for HWE departure. However, the small founder samples—particularly after separating cases and controls—limit the ability to detect deviations, so these results do not prove equilibrium or exclude genotyping errors.
