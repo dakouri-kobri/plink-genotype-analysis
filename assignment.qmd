@@ -281,3 +281,35 @@ freq_data2
 **Interpretation**
 
 All eight markers were polymorphic, with minor allele frequencies ranging from 8.33% at SNP7 to 50.00% at SNP6. Each marker had 24 counted allele copies, corresponding to 12 founders with non-missing diploid genotypes. SNP7’s minor allele was represented by only two copies, providing limited information for association testing. At SNP6, both alleles were equally frequent.
+
+## Exercise 10: Association test in dataset 2
+
+```{r}
+#| label: association-data2
+
+run_plink(
+  "data/raw/data2",
+  "--assoc",
+  "results/data2_assoc",
+  "--tfile"
+)
+
+assoc_data2 <- read.table(
+  "results/data2_assoc.assoc",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+assoc_data2$P_BONF <- p.adjust(
+  assoc_data2$P,
+  method = "bonferroni",
+  n = 8
+)
+
+print("Allelic association tests in dataset 2")
+assoc_data2
+```
+
+**Interpretation**
+
+Allelic chi-square tests identified nominal associations at SNP5 (P = 0.01298) and SNP6 (P = 0.01431). A at SNP5 was less frequent in cases than controls (OR = 0.10), whereas C at SNP6 was more frequent in cases (OR = 9.00). Neither association remained significant after Bonferroni correction for eight tests (threshold = 0.00625). Given the small sample and low allele counts, these results should be compared with Fisher’s exact tests.
