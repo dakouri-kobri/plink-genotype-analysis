@@ -367,3 +367,21 @@ ld_log_data2 <- readLines(
 **Interpretation**
 
 SNP4 and SNP5 showed weak linkage disequilibrium (r\^2 = 0.0476, D' = 0.2381). All four possible haplotypes had nonzero estimated frequencies, with A–A and C–T more frequent than expected under linkage equilibrium. The low r\^2 indicates limited predictive correspondence between the markers. These estimates describe LD strength in this small sample and do not, by themselves, establish statistical significance.
+
+## Exercise 13: Linkage disequilibrium between SNP5 and SNP6
+
+```{r}
+#| label: ld-data2-snp5-snp6
+
+run_plink(
+  "data/raw/data2",
+  c("--ld", "SNP5", "SNP6"),
+  "results/data2_ld_snp5_snp6",
+  "--tfile"
+)
+
+ld_log_snp5_snp6 <- readLines(
+  "results/data2_ld_snp5_snp6.log",
+  warn = FALSE
+)
+```
