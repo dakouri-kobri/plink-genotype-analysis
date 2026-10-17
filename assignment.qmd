@@ -255,3 +255,29 @@ Relevant quality control steps for genotyping-platform data checks both the indi
 - **Recorded sex consistency**: Investigate discrepancies using suitable sex-chromosome data
 - **Duplicates and relatedness**: Identify duplicate samples or unexpected relatives
 - **Population structure**: Identify ancestry differences that could confound association tests
+
+## Exercise 9: Allele frequencies in dataset 2
+
+```{r}
+#| label: allele-frequencies-data2
+
+run_plink(
+  "data/raw/data2",
+  "--freq",
+  "results/data2_freq",
+  "--tfile"
+)
+
+freq_data2 <- read.table(
+  "results/data2_freq.frq",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+print("Allele frequencies in dataset 2")
+freq_data2
+```
+
+**Interpretation**
+
+All eight markers were polymorphic, with minor allele frequencies ranging from 8.33% at SNP7 to 50.00% at SNP6. Each marker had 24 counted allele copies, corresponding to 12 founders with non-missing diploid genotypes. SNP7’s minor allele was represented by only two copies, providing limited information for association testing. At SNP6, both alleles were equally frequent.
