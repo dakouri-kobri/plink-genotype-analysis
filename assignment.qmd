@@ -590,3 +590,80 @@ knitr::kable(
 **Observations**
 
 Ensembl release 80 (May 2015) placed rs81356978 and rs81357016 on pig chromosome 2 at positions 34,177,927 and 34,599,571 bp, respectively, a separation of 421,644 bp. These coordinates were used to create the MAP file. The reference allele sets differed from those supplied in the exercise; the first difference is compatible with a strand reversal, whereas the second requires clarification.
+
+## Exercise 17: Introduce and detect a Mendelian error
+
+```{r}
+#| label: introduce-mendelian-error
+
+ped_error <- read.table(
+  "data/derived/pedigrees_ensembl.ped",
+  header = FALSE,
+  colClasses = "character"
+)
+
+child_row <- which(
+  ped_error$V1 == "F1" & ped_error$V2 == "son1"
+)
+
+stopifnot(length(child_row) == 1)
+
+# Change the first marker's genotype from AG to GG.
+ped_error[child_row, 7:8] <- c("G", "G")
+```
+
+```{r}
+#| label: run-mendelian-error-check
+
+write.table(
+  ped_error,
+  "data/derived/pedigrees_error.ped",
+  quote = FALSE,
+  row.names = FALSE,
+  col.names = FALSE
+)
+
+file.copy(
+  "data/derived/pedigrees_ensembl.map",
+  "data/derived/pedigrees_error.map",
+  overwrite = TRUE
+)
+
+run_plink(
+  input = "data/derived/pedigrees_error",
+  operation = "--mendel",
+  output = "results/pedigrees_error_mendel"
+)
+```
+
+```{r}
+#| label: display-introduced-errors
+
+error_lines <- readLines(
+  "results/pedigrees_error_mendel.mendel",
+  warn = FALSE
+)
+
+# Separate the first five fields; preserve the error description.
+error_lines <- sub(
+  "^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+",
+  "\\1\t\\2\t\\3\t\\4\t\\5\t",
+  error_lines,
+  perl = TRUE
+)
+
+introduced_errors <- read.delim(
+  text = paste(error_lines, collapse = "\n"),
+  header = TRUE,
+  colClasses = "character",
+  quote = "",
+  comment.char = "",
+  check.names = FALSE
+)
+
+cat("Number of detected errors:", nrow(introduced_errors), "\n")
+```
+
+**Interpretation**
+
+A Mendelian error was deliberately introduced by changing Family 1’s son1 genotype at the first marker, rs81356978, from AG to GG. PLINK detected one error, as expected, because an AA father and an AG mother cannot produce a GG offspring under ordinary Mendelian inheritance. This demonstrates how pedigree-based checks identify inheritance-incompatible genotypes.
