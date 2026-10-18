@@ -551,3 +551,42 @@ cat("Number of detected errors:", nrow(mendel_errors), "\n")
 **Interpretation**
 
 PED and MAP files were created for two families comprising 10 individuals genotyped at two loci, assigned illustrative positions 500 bp apart on chromosome 2. PLINK detected no Mendelian errors: all recorded offspring genotypes were compatible with inheritance from their recorded parents at both loci.
+
+## Exercise 16: Map positions from Ensembl
+
+Ensenbl release used: Ensembl release 80 (May 2015)
+
+```{r}
+#| label: create-ensembl-map
+
+ensembl_map <- data.frame(
+  CHR = c(2, 2),
+  SNP = c("rs81356978", "rs81357016"),
+  CM = c(0, 0),
+  BP = c(34177927, 34599571)
+)
+
+write.table(
+  ensembl_map,
+  "data/derived/pedigrees_ensembl.map",
+  quote = FALSE,
+  row.names = FALSE,
+  col.names = FALSE
+)
+
+# Supplied genotypes in their original locus order.
+file.copy(
+  "data/derived/pedigrees.ped",
+  "data/derived/pedigrees_ensembl.ped",
+  overwrite = TRUE
+)
+
+knitr::kable(
+  ensembl_map,
+  caption = "Marker coordinates from Ensembl release 80"
+)
+```
+
+**Observations**
+
+Ensembl release 80 (May 2015) placed rs81356978 and rs81357016 on pig chromosome 2 at positions 34,177,927 and 34,599,571 bp, respectively, a separation of 421,644 bp. These coordinates were used to create the MAP file. The reference allele sets differed from those supplied in the exercise; the first difference is compatible with a strand reversal, whereas the second requires clarification.
