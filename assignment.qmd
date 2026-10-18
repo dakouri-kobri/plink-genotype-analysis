@@ -462,3 +462,92 @@ print(hwe_data2)
 **interpretation**
 
 Exact Hardy–Weinberg equilibrium tests detected no significant departures at any marker in either dataset (all P \> 0.05). In controls, P-values were 0.5301–1.0000 for dataset 1 and 1.0000 for all markers in dataset 2. Thus, these tests did not flag any markers for HWE departure. However, the small founder samples—particularly after separating cases and controls—limit the ability to detect deviations, so these results do not prove equilibrium or exclude genotyping errors.
+
+## Exercise 15: Create pedigree files and check Mendelian inheritance
+
+```{r}
+#| label: create-pedigree-files
+
+dir.create(
+  "data/derived",
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+# Columns: family, individual, father, mother, sex, phenotype,
+#          two alleles at locus 1, two alleles at locus 2
+pedigree <- read.table(
+  text = "
+F1 father 0      0      1 1 A A T T
+F1 mother 0      0      2 2 A G T C
+F1 son1   father mother 1 2 A G T C
+F1 son2   father mother 1 1 A A T T
+F2 father 0      0      1 2 A G T C
+F2 mother 0      0      2 1 A A T C
+F2 child1 father mother 2 2 A G T C
+F2 child2 father mother 1 1 A A T C
+F2 child3 father mother 2 2 A G C C
+F2 child4 father mother 2 1 A A T T
+",
+  colClasses = "character"
+)
+
+names(pedigree) <- c(
+  "FID", "IID", "PAT", "MAT", "SEX", "PHENO",
+  "L1_a", "L1_b", "L2_a", "L2_b"
+)
+
+# Illustrative positions, 500 bp apart on chromosome 2.
+marker_map <- data.frame(
+  CHR = c(2, 2),
+  SNP = c("locus1", "locus2"),
+  CM = c(0, 0),
+  BP = c(1000, 1500)
+)
+
+write.table(
+  pedigree,
+  "data/derived/pedigrees.ped",
+  quote = FALSE,
+  row.names = FALSE,
+  col.names = FALSE
+)
+
+write.table(
+  marker_map,
+  "data/derived/pedigrees.map",
+  quote = FALSE,
+  row.names = FALSE,
+  col.names = FALSE
+)
+
+knitr::kable(pedigree, caption = "Encoded pedigree and genotype data")
+knitr::kable(marker_map, caption = "Illustrative marker map")
+```
+
+```{r}
+#| label: mendelian-check-pedigrees
+
+run_plink(
+  input = "data/derived/pedigrees",
+  operation = "--mendel",
+  output = "results/pedigrees_mendel"
+)
+
+mendel_errors <- read.table(
+  "results/pedigrees_mendel.mendel",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+knitr::kable(
+  mendel_errors,
+  caption = "Detected Mendelian errors"
+)
+
+cat("Number of detected errors:", nrow(mendel_errors), "\n")
+```
+
+**Interpretation**
+
+PED and MAP files were created for two families comprising 10 individuals genotyped at two loci, assigned illustrative positions 500 bp apart on chromosome 2. PLINK detected no Mendelian errors: all recorded offspring genotypes were compatible with inheritance from their recorded parents at both loci.
